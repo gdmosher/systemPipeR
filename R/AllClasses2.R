@@ -581,6 +581,14 @@ pathInstance <- function(pathvar, input, altinput) {
     }
     myvalue_list[i] <- myvalue
   }
+  ## Trap to bypass path work on non-path variables
+  ## other primitive data types to consider null, boolean, int, long, float, double, string
+  ## and their arrays []
+  ## all types except File and Directory can trap here
+  if (altinput[pathvarlist[[1]][[2]]][[1]][[2]] 
+      %in% c("string[]", "int[]", "string", "int") ) {
+    return(unlist(myvalue))
+  }
   ## Use altinput if no values were assigned by input
   if(all(sapply(myvalue_list, length)==0)) {
     myvalue_list <- sapply(seq_along(pathvarlist), function(x) altinput[[pathvarlist[[x]][[2]]]]$default, simplify=FALSE)
