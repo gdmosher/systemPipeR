@@ -166,12 +166,9 @@ runCommandline <- function(args, runid="01", make_bam=TRUE, del_sam=TRUE, dir=FA
           completed[[i]][[j]] <- file.exists(output(args)[[i]][[j]])
           names(completed[[i]][[j]]) <- output(args)[[i]][[j]]
           outputList <- c(outputList, output(args)[[i]][[j]])
+          names(outputList)[(names(outputList))==""] <- names(output(args)[i])
+          names(outputList)[isNA(names(outputList))] <- names(output(args)[i])
         }
-      }
-      if(length(output(args)[[1]][[1]])==1){
-        names(outputList) <- rep(names(output(args)), each=length(output(args)[[1]]))  
-      } else if(length(output(args)[[1]][[1]])>1){
-        names(outputList) <- rep(names(output(args)), each=length(output(args)[[1]][[1]])) 
       }
     } else if(make_bam==TRUE) {
       if(any(grepl("samtools", names(clt(args))))){ stop("argument 'make_bam' should be 'FALSE' when using the workflow with 'SAMtools'")} 
@@ -188,14 +185,10 @@ runCommandline <- function(args, runid="01", make_bam=TRUE, del_sam=TRUE, dir=FA
               outputList <- c(outputList, paste0(gsub("\\.bam$", "", output(args1)[[i]][[j]][k]), ".bam.bai"))
             }
           }
+          names(outputList)[(names(outputList))==""] <- names(output(args)[i])
+          names(outputList)[isNA(names(outputList))] <- names(output(args)[i])
         }
       }
-      if(length(output(args)[[1]][[1]])==1){
-        names(outputList) <- rep(names(output(args)), each=length(output(args)[[1]])+1)  
-      } else if(length(output(args)[[1]][[1]])>1){
-        names(outputList) <- rep(names(output(args)), each=length(output(args)[[1]][[1]])+1) 
-      }
-      # names(outputList) <- rep(names(output(args)), each=length(output(args)[[1]])+1)
       args.return <- output_update(args.return, dir=FALSE, replace=TRUE, extension=c(".sam", ".bam"))
     }
     for(i in seq_along(cmdlist(args))){
