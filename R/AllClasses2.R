@@ -532,11 +532,17 @@ output_update <- function(args, dir=TRUE, dir.name=NULL, replace=FALSE, extensio
           dir <- sub("/([^/]*)$", "", args$output[[i]][[j]][k])
           if(grepl(extension[1], name)){
             sam <- strsplit(name, split="\\.")[[1]]
-            sam <- sam[length(sam)]
-            if(sam=="sam"){
-              args$output[[i]][[j]][k] <- suppressWarnings(normalizePath(paste0(dir, "/", names(args$output[i]), extension[2])))
+            useRealNameForSTAR <- ((length(sam)==4) && (sam[2]=="Aligned"))
+            if (useRealNameForSTAR) {
+              realname <- gsub("\\.sam$", "", name)
+              args$output[[i]][[j]][k] <- suppressWarnings(normalizePath(paste0(dir, "/", realname, extension[2])))
             } else {
-              args$output[[i]][[j]][k] <- suppressWarnings(normalizePath(paste0(dir, "/", name)))
+              sam <- sam[length(sam)]
+              if(sam=="sam"){
+                args$output[[i]][[j]][k] <- suppressWarnings(normalizePath(paste0(dir, "/", names(args$output[i]), extension[2])))
+              } else {
+                args$output[[i]][[j]][k] <- suppressWarnings(normalizePath(paste0(dir, "/", name)))
+              }
             }
           } else {
             args$output[[i]][[j]][k] <- args$output[[i]][[j]][k]
