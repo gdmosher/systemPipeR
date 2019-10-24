@@ -369,10 +369,41 @@ renderWF <- function(WF, inputvars=c(FileName="_FASTQ_PATH_")) {
     inputvarslist <- sapply(names(inputvars), function(x) "", simplify=FALSE)
     if(!length(names(targets(WF)))==0) (if(any(!names(inputvars) %in% colnames(targets.as.df(WF$targets)))) stop("Please note that the 'inputvars' variables need to be defined in the 'input_file'; as well it needs to match the column names defined in the 'targets' file."))
     input <- yamlinput(WF)
+    print("Gordon render0")
+    #print(input)
     for(i in seq_along(inputvars)) {
+      print(names(inputvars)[i])
+      # push this statement
+      if ( !(inputvars[[i]] %in% input) && !(inputvars[[i]] %in% names(input)) ) {
+          cat(paste("Can't match inputvars", inputvars[[i]] , "in renderWF()")) 
+      } 
       subvalue <- targets(WF)[[id]][[names(inputvars)[i]]]
+      print(subvalue)
       if(length(subvalue)!=0) {
+        #browser()
+	# next statement replaces by value of input, e.g. _FASTQ_PATH1 or _SampleName_
+        if ( inputvars[[i]] %in% input) {
+          cat(paste("Ready to replace", inputvars[[i]] , "in renderWF()")) 
+        }
         input <- rapply(input, function(x) gsub(inputvars[[i]], subvalue, x), how = "replace")
+	# next statement replaces by name of input, e.g. fq1, fq2 or SampleName
+        print(i)
+	print(inputvars[i])
+	print(names(inputvars[i]))
+	print(input[names(inputvars[i])])
+        # push this statement
+        if (inputvars[[i]] %in% names(input)) {
+          cat(paste("Ready to replace", inputvars[[i]] , "in renderWF()")) 
+          if ( is.null(names(input[inputvars[i]][[1]])) ) {
+            input[inputvars[i]][[1]] = subvalue
+          } else if (    all(c("class","path") %in% names(input[inputvars[i]][[1]]) )
+                      && (    (input[inputvars[i]][[1]]["class"] == "File")
+                           || (input[inputvars[i]][[1]]["class"] == "Directory")  )) {
+            input[inputvars[i]][[1]]["path"] = subvalue
+          } else {
+            cat(paste("Trouble with class or path for", names(input[inputvars[i]]) , "in renderWF()")) 
+          }
+	}
         inputvarslist[[i]] <- subvalue
       }
     }
