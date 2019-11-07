@@ -622,7 +622,7 @@ pathInstance <- function(pathvar, input, altinput) {
   ## other primitive data types to consider null, boolean, int, long, float, double, string
   ## and their arrays []
   ## all types except File and Directory can trap here
-  if (altinput[pathvarlist[[1]][[2]]][[1]][[2]] 
+  if (altinput[pathvarlist[[1]][[2]]][[1]]$type 
       %in% c("string[]", "int[]", "string", "int") ) {
     return(unlist(myvalue))
   }

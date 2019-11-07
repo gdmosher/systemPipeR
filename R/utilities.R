@@ -167,7 +167,7 @@ runCommandline <- function(args, runid="01", make_bam=TRUE, del_sam=TRUE, dir=FA
           names(completed[[i]][[j]]) <- output(args)[[i]][[j]]
           outputList <- c(outputList, output(args)[[i]][[j]])
           names(outputList)[(names(outputList))==""] <- names(output(args)[i])
-          names(outputList)[isNA(names(outputList))] <- names(output(args)[i])
+          names(outputList)[is.na(names(outputList))] <- names(output(args)[i])
         }
       }
     } else if(make_bam==TRUE) {
@@ -186,7 +186,7 @@ runCommandline <- function(args, runid="01", make_bam=TRUE, del_sam=TRUE, dir=FA
             }
           }
           names(outputList)[(names(outputList))==""] <- names(output(args)[i])
-          names(outputList)[isNA(names(outputList))] <- names(output(args)[i])
+          names(outputList)[is.na(names(outputList))] <- names(output(args)[i])
         }
       }
       args.return <- output_update(args.return, dir=FALSE, replace=TRUE, extension=c(".sam", ".bam"))
