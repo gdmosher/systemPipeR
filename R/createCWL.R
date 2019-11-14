@@ -307,8 +307,9 @@ createSTWF <- function( CLTnames = "", overwrite = FALSE, fileprefix = "stwf_", 
   )
 ## steps are like a mini cltlist, with replacement input mappings for inputs from prev steps
   steps <- list(
-     "./clt_hisat2-mapping-se-intronlen30-3000.cwl" = list() # only one clt in STWF
+     "CLTnames[[1]]"= list() # only one clt in STWF, name it on next line
   )
+  names(steps) <- gsub("clt_", "", CLTnames[[1]])
   WFdescription <- list(id=id, header=header, requirements=requirements, steps=steps)
   rm(list=c("id","header","requirements","steps"), inherits=T) # make sure these don't get referenced directly later
   WFdescription
